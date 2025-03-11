@@ -1,0 +1,28 @@
+# Ignorar archivos del sistema operativo
+Thumbs.db
+.DS_Store
+
+# Ignorar carpetas de dependencias locales
+node_modules/
+vendor/
+.git/
+
+# Ignorar archivos de logs
+*.log
+
+# Ignorar archivos de compilación
+*.o
+*.a
+*.out
+
+# Ignorar archivos temporales
+*.tmp
+*.swp
+
+node_modules
+.git
+Dockerfile
+.dockerignore
+
+# Ignorar archivos de test
+tests/

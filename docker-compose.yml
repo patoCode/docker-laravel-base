@@ -1,0 +1,62 @@
+version: '3.8'
+
+services:
+  ### 🌐 Servicio Nginx ###
+  nginx:
+    build:
+      context: .
+      dockerfile: docker/nginx/Dockerfile
+    container_name: nginx-container
+    ports:
+      - "80:80"  # Puerto 80 de la máquina local al contenedor Nginx
+    volumes:
+      - ./app:/var/www/html  # Monta la aplicación Laravel
+      - ./docker/nginx/nginx.conf:/etc/nginx/nginx.conf
+      - ./docker/nginx/default.conf:/etc/nginx/conf.d/default.conf
+      - ./docker/nginx/snippets:/etc/nginx/snippets
+    depends_on:
+      - php
+      - postgres
+    networks:
+      - laravel_network
+
+  ### 🐘 Servicio PHP-FPM ###
+  php:
+    build: 
+      context: ./docker/php
+      args:
+        XDEBUG: ${XDEBUG}
+    container_name: laravel_php
+    volumes:
+      - ./app:/var/www/html
+      - /var/www/html/node_modules
+    ports:
+      - "5173:5173"
+    networks:
+      - laravel_network
+
+  ### 🗄️ Servicio PostgreSQL ###
+  postgres:
+    image: postgres:16
+    container_name: laravel_postgres
+    restart: always
+    environment:
+      POSTGRES_DB: app
+      POSTGRES_USER: dev
+      POSTGRES_PASSWORD: dev
+    volumes:
+      - ./docker/postgres/init.sql:/docker-entrypoint-initdb.d/init.sql
+      - postgres_data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    networks:
+      - laravel_network
+
+### 📡 Definimos la red interna ###
+networks:
+  laravel_network:
+    driver: bridge
+
+### 📦 Volúmenes persistentes ###
+volumes:
+  postgres_data:
