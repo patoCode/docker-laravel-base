@@ -1,7 +1,7 @@
 # LARAVEL BASE
 
 ### Clonar el repositorio repositorio
-
+Si no existe el directorio **app** es libre de crearlo
 ```
 	git clone <url_repositorio> app
 	cd /app
